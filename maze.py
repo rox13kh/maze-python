@@ -1,17 +1,18 @@
 import turtle
 import random
 
+#setup maze window
 maze = turtle.Screen()
 maze.bgcolor("black")
 maze.title("Maze")
-#maze.setup(700,500)sk
 
+#register GIF files as shapes, all 24x24 px
 turtle.register_shape("wall2424.gif")
 turtle.register_shape("vanellope2424.gif")
 turtle.register_shape("cookie2424.gif")
 turtle.register_shape("bowser2424.gif")
 
-#Pen can do everything turtle can do
+#class for walls
 class Pen(turtle.Turtle):
     def __init__(self):
         turtle.Turtle.__init__(self)
@@ -20,7 +21,8 @@ class Pen(turtle.Turtle):
         self.penup()
         #fastest speed
         self.speed()
-
+        
+#class for treasures
 class Treasure(turtle.Turtle):
     def __init__(self, x, y):
         turtle.Turtle.__init__(self)
@@ -35,7 +37,7 @@ class Treasure(turtle.Turtle):
         self.goto(2000,2000)
         self.hideturtle()
 
-
+#class for the player
 class Player(turtle.Turtle):
     def __init__(self):
         turtle.Turtle.__init__(self)
@@ -73,13 +75,15 @@ class Player(turtle.Turtle):
 
         if (move_to_x, move_to_y) not in walls:
             self.goto(move_to_x, move_to_y)
-
+    
+    #this function is called if player is colliding with another element, e.g. enemy or treasure
     def isCollision (self, other):
         if self.xcor() == other.xcor() and self.ycor() == other.ycor():
             return True
         else:
             return False
 
+#class definition for enemy
 class Enemy(turtle.Turtle):
     def __init__(self, x, y):
         turtle.Turtle.__init__(self)
@@ -88,7 +92,8 @@ class Enemy(turtle.Turtle):
         self.speed(0)
         self.goto(x, y)
         self.direction = random.choice(["up", "down", "left", "right"])
-
+    
+    #definition for enemy movement 
     def move(self):
         if self.direction == "up":
             dx = 0
@@ -116,6 +121,7 @@ class Enemy(turtle.Turtle):
 
         turtle.ontimer(self.move, t=random.randint(100,300))
 
+#this function helps paint your level
 def mazeSetup(level):
     for y in range(len(level)):
         for x in range(len(level[y])):
@@ -143,8 +149,7 @@ def mazeSetup(level):
             if character == "Y":
                 exits.append((screen_x, screen_y))
 
-levels = [""]
-
+#your level design                 
 level_1 = [
     "XXXXXXXXXXXXXXXXXXXXXXXX",
     "P  XXXXXXX         XXXXX",
@@ -172,12 +177,11 @@ walls = []
 treasures = []
 enemies = []
 exits = []
-levels.append(level_1)
 
 pen = Pen()
 player = Player()
 
-mazeSetup((levels[1]))
+mazeSetup((level_1))
 
 turtle.listen()
 turtle.onkey(player.goLeft, "Left")
